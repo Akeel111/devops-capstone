@@ -1,0 +1,29 @@
+services:
+
+  web:
+    build: .
+    container_name: devops-web
+    ports:
+      - "5000:5000"
+    environment:
+      DB_HOST: db
+      DB_NAME: capstone_db
+      DB_USER: capstone_user
+      DB_PASSWORD: capstone_password
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17
+    container_name: devops-db
+    environment:
+      POSTGRES_DB: capstone_db
+      POSTGRES_USER: capstone_user
+      POSTGRES_PASSWORD: capstone_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

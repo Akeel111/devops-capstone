@@ -1,0 +1,26 @@
+# Terraform local files
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+crash.log
+crash.*.log
+
+# Terraform variable files - may contain passwords/secrets
+*.tfvars
+*.tfvars.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Environment variables / secrets
+.env
+.env.*
+
+# IDE / OS
+.vscode/
+.DS_Store
+Thumbs.db
