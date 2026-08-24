@@ -6,15 +6,24 @@ terraform {
     }
   }
 
+  backend "s3" {
+    bucket       = "devops-capstone-tf-state-509521484446"
+    key          = "devops-capstone/terraform.tfstate"
+    region       = "af-south-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+
   required_version = ">= 1.5.0"
 }
 
 provider "aws" {
   region = "af-south-1"
 }
-# -------------------------
+
+# --------------------------
 # VPC
-# -------------------------
+# --------------------------
 
 resource "aws_vpc" "main" {
   cidr_block           = "10.0.0.0/16"
@@ -26,9 +35,9 @@ resource "aws_vpc" "main" {
   }
 }
 
-# -------------------------
+# --------------------------
 # Public Subnet
-# -------------------------
+# --------------------------
 
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
@@ -41,9 +50,9 @@ resource "aws_subnet" "public" {
   }
 }
 
-# -------------------------
+# --------------------------
 # Private Subnet
-# -------------------------
+# --------------------------
 
 resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.main.id
@@ -54,9 +63,10 @@ resource "aws_subnet" "private" {
     Name = "devops-capstone-private-subnet"
   }
 }
-# -------------------------
+
+# --------------------------
 # Internet Gateway
-# -------------------------
+# --------------------------
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
@@ -66,9 +76,9 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-# -------------------------
+# --------------------------
 # Public Route Table
-# -------------------------
+# --------------------------
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
@@ -83,17 +93,18 @@ resource "aws_route_table" "public" {
   }
 }
 
-# -------------------------
+# --------------------------
 # Public Route Table Association
-# -------------------------
+# --------------------------
 
 resource "aws_route_table_association" "public" {
   subnet_id      = aws_subnet.public.id
   route_table_id = aws_route_table.public.id
 }
-# -------------------------
+
+# --------------------------
 # Security Group
-# -------------------------
+# --------------------------
 
 resource "aws_security_group" "web_sg" {
   name        = "devops-capstone-web-sg"
@@ -127,9 +138,10 @@ resource "aws_security_group" "web_sg" {
     Name = "devops-capstone-web-sg"
   }
 }
-# -------------------------
+
+# --------------------------
 # Latest Amazon Linux AMI
-# -------------------------
+# --------------------------
 
 data "aws_ami" "amazon_linux" {
   most_recent = true
@@ -141,9 +153,9 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
-# -------------------------
+# --------------------------
 # EC2 Instance
-# -------------------------
+# --------------------------
 
 resource "aws_instance" "web" {
   ami                         = data.aws_ami.amazon_linux.id
