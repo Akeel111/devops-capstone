@@ -9,6 +9,9 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    env:
+      TF_VAR_db_password: ${{ secrets.TF_VAR_db_password }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -51,13 +54,13 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform -chdir=terraform init
 
       - name: Terraform Validate
-        run: terraform validate
+        run: terraform -chdir=terraform validate
 
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform -chdir=terraform plan
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform -chdir=terraform apply -auto-approve
